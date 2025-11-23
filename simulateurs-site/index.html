@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Accueil – Mes Simulateurs en Ligne</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22%230f172a%22/%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.35em%22%20font-size%3D%2234%22%20fill%3D%22%2338bdf8%22%3E%CE%A3%3C/text%3E%3C/svg%3E"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-body: #0f172a;
+        --bg-card: #020617;
+        --bg-card-soft: #030712;
+        --accent: #38bdf8;
+        --accent-soft: #0ea5e9;
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --border-soft: #1f2937;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(
+          circle at top,
+          #1d2537 0,
+          #020617 55%,
+          #000 100%
+        );
+        margin: 0;
+        padding: 0;
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        border-bottom: 1px solid #1f2933;
+        background: linear-gradient(to right, #020617dd, #020617aa);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+
+      .header-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 14px 16px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #e5f3ff,
+          #0ea5e9,
+          #1d4ed8
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+      }
+
+      .logo-text-main {
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        font-size: 16px;
+      }
+
+      .logo-text-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .badge-beta {
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid #1f2937;
+        color: var(--text-muted);
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      nav a {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        background: transparent;
+        transition: all 0.18s ease;
+      }
+
+      nav a:hover {
+        color: #e5e7eb;
+        border-color: #1f2937;
+        background: #020617dd;
+      }
+
+      nav a.active {
+        border-color: var(--accent);
+        background: #0b1120;
+        color: #e0f2fe;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      .page {
+        width: 90%;
+        max-width: 1000px;
+        margin: 22px auto 40px;
+        animation: fadeIn 0.4s ease-out;
+      }
+
+      .hero {
+        padding: 20px 18px 18px;
+        border-radius: 14px;
+        background: radial-gradient(circle at top left, #0f172a, #020617);
+        border: 1px solid #1f2937;
+        box-shadow: 0 18px 50px rgba(15, 23, 42, 0.9);
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+        gap: 16px;
+      }
+
+      @media (max-width: 720px) {
+        .hero {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .hero-text h1 {
+        margin: 0 0 8px;
+        font-size: 22px;
+      }
+
+      .hero-text p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      .hero-highlight {
+        margin-top: 10px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .hero-pill {
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid #1d4ed8;
+        background: #020617;
+        font-size: 12px;
+        color: #bfdbfe;
+      }
+
+      .hero-mini {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .hero-side {
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #020617;
+        border: 1px solid #1f2937;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .hero-metric {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .hero-metric strong {
+        display: block;
+        font-size: 20px;
+        color: #e5e7eb;
+      }
+
+      .hero-bullets {
+        margin-top: 6px;
+        list-style: none;
+        padding: 0;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .hero-bullets li::before {
+        content: "• ";
+        color: var(--accent-soft);
+      }
+
+      .hero-cta {
+        margin-top: auto;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        border-radius: 999px;
+        border: none;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        background: linear-gradient(to right, #0ea5e9, #2563eb);
+        color: #e5f2ff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+      }
+
+      .btn-primary:hover {
+        filter: brightness(1.05);
+      }
+
+      .btn-ghost {
+        border-radius: 999px;
+        border: 1px solid #1f2937;
+        padding: 8px 11px;
+        font-size: 13px;
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+      }
+
+      .btn-ghost:hover {
+        background: #020617;
+        color: #e5e7eb;
+      }
+
+      .section-title {
+        margin: 22px 2px 10px;
+        font-size: 16px;
+        color: #e5e7eb;
+      }
+
+      .section-sub {
+        margin: 0 2px 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 14px;
+      }
+
+      .card {
+        background: #020617;
+        border-radius: 14px;
+        padding: 16px 15px 14px;
+        border: 1px solid #111827;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.75);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transform: translateY(0);
+        transition: transform 0.16s ease, box-shadow 0.16s ease,
+          border-color 0.16s ease, background 0.16s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+        border-color: #1d4ed8;
+        background: #020617;
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at top right,
+          rgba(56, 189, 248, 0.065),
+          transparent 55%
+        );
+        opacity: 0;
+        transition: opacity 0.18s ease;
+        pointer-events: none;
+      }
+
+      .card:hover::after {
+        opacity: 1;
+      }
+
+      .card-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #020617;
+        border: 1px solid #1f2937;
+        color: #9ca3af;
+        width: fit-content;
+      }
+
+      .card-icon-circle {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #e0f2fe,
+          #0ea5e9,
+          #1d4ed8
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        margin-bottom: 4px;
+        box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+      }
+
+      .card h3 {
+        margin: 2px 0 4px;
+        font-size: 16px;
+      }
+
+      .card p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .card-meta {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .card-meta strong {
+        color: #e5e7eb;
+      }
+
+      .card-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .card a.btn-small {
+        text-decoration: none;
+        font-size: 12px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid #1d4ed8;
+        color: #dbeafe;
+        background: linear-gradient(to right, #0ea5e9, #1d4ed8);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .card a.btn-small:hover {
+        filter: brightness(1.05);
+      }
+
+      .card a.btn-ghost-small {
+        text-decoration: none;
+        font-size: 12px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid #1f2937;
+        color: #9ca3af;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: transparent;
+      }
+
+      .card a.btn-ghost-small:hover {
+        background: #020617;
+        color: #e5e7eb;
+      }
+
+      .ad-strip {
+        margin: 18px 0 8px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        border: 1px dashed #1d4ed8;
+        background: #020617;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.9);
+        font-size: 13px;
+        color: #9ca3af;
+      }
+
+      .ad-strip strong {
+        color: #e5e7eb;
+      }
+
+      footer {
+        text-align: center;
+        font-size: 12px;
+        color: #6b7280;
+        padding: 12px 0 20px;
+      }
+
+      footer span {
+        color: #9ca3af;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="header-top">
+          <div class="logo">
+            <div class="logo-icon">Σ</div>
+            <div>
+              <div class="logo-text-main">Mes Simulateurs</div>
+              <div class="logo-text-sub">
+                Petits outils pour mieux gérer ton argent
+              </div>
+            </div>
+          </div>
+          <div class="badge-beta">Version précoce · en construction</div>
+        </div>
+
+        <nav>
+          <a href="index.html" class="active">Accueil</a>
+          <a href="epargne.html">Économies</a>
+          <a href="trajet.html">Trajet</a>
+          <a href="abonnements.html">Abonnements</a>
+          <a href="objectif.html">Objectif d’achat</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="page">
+        <section class="hero">
+          <div class="hero-text">
+            <h1>
+              Un petit site de simulateurs pour voir où part ton argent 💸
+            </h1>
+            <p>
+              Simule en quelques secondes tes économies, le coût d’un trajet,
+              l’impact de tes abonnements ou le temps pour acheter ce que tu
+              veux.
+            </p>
+            <div class="hero-highlight">
+              <div class="hero-pill">
+                100% gratuit · pensé pour les ados & étudiants
+              </div>
+              <div class="hero-mini">Tu ouvres, tu tapes, tu comprends.</div>
+            </div>
+          </div>
+          <div class="hero-side">
+            <div>
+              <div class="hero-metric">
+                <strong>4 simulateurs</strong>
+                disponibles pour l’instant (et d’autres à venir).
+              </div>
+              <ul class="hero-bullets">
+                <li>Comprendre combien tu peux épargner.</li>
+                <li>Voir ce que coûte vraiment un trajet.</li>
+                <li>Mesurer l’impact de tes abonnements.</li>
+                <li>Estimer quand tu peux t’acheter ce que tu veux.</li>
+              </ul>
+            </div>
+            <div class="hero-cta">
+              <a href="epargne.html" class="btn-primary">
+                Commencer avec les économies →
+              </a>
+              <a href="#liste" class="btn-ghost"> Voir tous les simulateurs </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Espace pub / partenaire sur la page d'accueil -->
+        <section class="ad-strip">
+          <strong>Espace partenaire (à venir)</strong><br />
+          Ici, tu pourras plus tard afficher une recommandation d’app de budget,
+          de carte bancaire pour jeunes ou d’outil financier. Cet emplacement
+          pourra servir à de la publicité ou à de l’affiliation.
+        </section>
+
+        <h2 class="section-title" id="liste">Les simulateurs disponibles</h2>
+        <p class="section-sub">
+          Chaque simulateur a sa propre page avec une explication simple et un
+          calcul instantané.
+        </p>
+
+        <section class="cards">
+          <article class="card" onclick="location.href='epargne.html'">
+            <div class="card-icon-circle">💰</div>
+            <span class="card-tag">Budget / économies</span>
+            <h3>Simulateur d’économies mensuelles</h3>
+            <p>
+              Indique ton argent qui rentre, tes dépenses et la durée. Le
+              simulateur t’indique combien tu peux mettre de côté au total.
+            </p>
+            <div class="card-meta">
+              Idéal pour voir si ton budget tient la route sur
+              <strong>plusieurs mois</strong>.
+            </div>
+            <div class="card-actions">
+              <a href="epargne.html" class="btn-small"
+                >Ouvrir le simulateur →</a
+              >
+              <a href="epargne.html#explications" class="btn-ghost-small"
+                >Lire les explications</a
+              >
+            </div>
+          </article>
+
+          <article class="card" onclick="location.href='trajet.html'">
+            <div class="card-icon-circle">🚗</div>
+            <span class="card-tag">Transport / carburant</span>
+            <h3>Simulateur de coût d’un trajet</h3>
+            <p>
+              Tu entres la distance, la conso de la voiture et le prix de
+              l’essence. Résultat : combien le trajet te coûte en carburant.
+            </p>
+            <div class="card-meta">
+              Pratique pour comparer deux trajets ou covoiturages, surtout si
+              l’essence est chère.
+            </div>
+            <div class="card-actions">
+              <a href="trajet.html" class="btn-small">Ouvrir le simulateur →</a>
+              <a href="trajet.html#explications" class="btn-ghost-small"
+                >Voir un exemple</a
+              >
+            </div>
+          </article>
+
+          <article class="card" onclick="location.href='abonnements.html'">
+            <div class="card-icon-circle">📺</div>
+            <span class="card-tag">Netflix, Spotify & co</span>
+            <h3>Simulateur d’abonnements mensuels</h3>
+            <p>
+              Renseigne le prix de tes abonnements (streaming, musique, jeux…).
+              Le simulateur additionne tout et calcule le coût annuel.
+            </p>
+            <div class="card-meta">
+              Tu verras combien tu dépenses juste pour tes
+              <strong>abonnements</strong>.
+            </div>
+            <div class="card-actions">
+              <a href="abonnements.html" class="btn-small"
+                >Ouvrir le simulateur →</a
+              >
+              <a href="abonnements.html#explications" class="btn-ghost-small"
+                >Comprendre l’impact</a
+              >
+            </div>
+          </article>
+
+          <article class="card" onclick="location.href='objectif.html'">
+            <div class="card-icon-circle">🎯</div>
+            <span class="card-tag">Objectif d’achat</span>
+            <h3>Simulateur d’objectif d’achat</h3>
+            <p>
+              Tu veux acheter quelque chose (console, téléphone, voyage) ?
+              Indique le prix et ce que tu peux mettre de côté chaque mois pour
+              savoir combien de temps ça prendra.
+            </p>
+            <div class="card-meta">
+              Parfait pour planifier un <strong>gros achat</strong> sans
+              mauvaises surprises.
+            </div>
+            <div class="card-actions">
+              <a href="objectif.html" class="btn-small"
+                >Ouvrir le simulateur →</a
+              >
+              <a href="objectif.html#explications" class="btn-ghost-small"
+                >Voir comment ça marche</a
+              >
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Mes Simulateurs en Ligne</span> · <span id="year"></span> · Version
+      d’essai<br />
+      <small
+        >Certains emplacements pourront accueillir des liens partenaires
+        (affiliation) plus tard.</small
+      >
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

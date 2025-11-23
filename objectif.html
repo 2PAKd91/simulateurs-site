@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simulateur d’objectif d’achat – Mes Simulateurs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2216%22%20fill%3D%22%230f172a%22/%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.35em%22%20font-size%3D%2234%22%20fill%3D%22%2338bdf8%22%3E%CE%A3%3C/text%3E%3C/svg%3E"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-body: #0f172a;
+        --bg-card: #020617;
+        --accent: #38bdf8;
+        --accent-soft: #0ea5e9;
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --border-soft: #1f2937;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(
+          circle at top,
+          #1d2537 0,
+          #020617 55%,
+          #000 100%
+        );
+        margin: 0;
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        border-bottom: 1px solid #1f2933;
+        background: linear-gradient(to right, #020617dd, #020617aa);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+
+      .header-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 14px 16px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #e5f3ff,
+          #0ea5e9,
+          #1d4ed8
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+      }
+
+      .logo-text-main {
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        font-size: 16px;
+      }
+
+      .logo-text-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      nav a {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        background: transparent;
+        transition: all 0.18s ease;
+      }
+
+      nav a:hover {
+        color: #e5e7eb;
+        border-color: #1f2937;
+        background: #020617dd;
+      }
+
+      nav a.active {
+        border-color: var(--accent);
+        background: #0b1120;
+        color: #e0f2fe;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      .page {
+        width: 90%;
+        max-width: 900px;
+        margin: 22px auto 40px;
+      }
+
+      .intro-card,
+      .tool-card,
+      .ad-card {
+        background: #020617;
+        border-radius: 14px;
+        padding: 18px 16px;
+        border: 1px solid #111827;
+        box-shadow: 0 14px 40px rgba(15, 23, 42, 0.9);
+        margin-bottom: 18px;
+      }
+
+      .intro-tag {
+        font-size: 11px;
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid #1f2937;
+        color: #9ca3af;
+        margin-bottom: 6px;
+      }
+
+      h1 {
+        margin: 4px 0 6px;
+        font-size: 20px;
+      }
+
+      .intro-card p {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin: 4px 0;
+      }
+
+      .hint {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 10px;
+      }
+
+      h2 {
+        margin: 0 0 8px;
+        font-size: 17px;
+      }
+
+      label {
+        display: block;
+        margin-top: 12px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #1f2937;
+        background: #020617;
+        color: var(--text-main);
+        font-size: 15px;
+      }
+
+      input::placeholder {
+        color: #4b5563;
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 1px #2563eb55;
+      }
+
+      button {
+        margin-top: 16px;
+        width: 100%;
+        padding: 11px;
+        font-size: 15px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        background: linear-gradient(to right, #0ea5e9, #2563eb);
+        color: #e5f2ff;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      button:hover {
+        filter: brightness(1.05);
+      }
+
+      .resultat {
+        margin-top: 14px;
+        padding: 12px;
+        border-radius: 10px;
+        background: #0b1120;
+        border: 1px solid #1d4ed8;
+        font-size: 14px;
+        color: #dbeafe;
+      }
+
+      .ad-card {
+        border-style: dashed;
+        border-color: #1d4ed8;
+        font-size: 13px;
+        color: #9ca3af;
+      }
+
+      .ad-card strong {
+        color: #e5e7eb;
+      }
+
+      footer {
+        text-align: center;
+        font-size: 12px;
+        color: #6b7280;
+        padding: 10px 0 18px;
+      }
+
+      a.inline-link {
+        color: #93c5fd;
+        text-decoration: none;
+        font-size: 12px;
+      }
+
+      a.inline-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">
+        <div class="header-top">
+          <div class="logo">
+            <div class="logo-icon">Σ</div>
+            <div>
+              <div class="logo-text-main">Mes Simulateurs</div>
+              <div class="logo-text-sub">Simulateur d’objectif d’achat</div>
+            </div>
+          </div>
+        </div>
+
+        <nav>
+          <a href="index.html">Accueil</a>
+          <a href="epargne.html">Économies</a>
+          <a href="trajet.html">Trajet</a>
+          <a href="abonnements.html">Abonnements</a>
+          <a href="objectif.html" class="active">Objectif d’achat</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="page">
+        <section class="intro-card" id="explications">
+          <span class="intro-tag">Objectif / gros achat</span>
+          <h1>Simulateur d’objectif d’achat</h1>
+          <p>
+            Tu veux t’acheter quelque chose (console, téléphone, PC, voyage…) et
+            tu veux savoir <strong>combien de temps</strong> il te faudra pour y
+            arriver.
+          </p>
+          <p>
+            Tu entres le <strong>prix de l’objectif</strong> et le montant que
+            tu peux mettre de côté <strong>chaque mois</strong>. Le simulateur
+            te donne :
+          </p>
+          <ul
+            style="
+              margin: 6px 0 0 18px;
+              padding: 0;
+              font-size: 13px;
+              color: #9ca3af;
+            "
+          >
+            <li>le nombre de mois nécessaires ;</li>
+            <li>une estimation en années + mois ;</li>
+            <li>et une date approximative à laquelle tu auras l’argent.</li>
+          </ul>
+          <p class="hint">
+            Exemple : objectif 600 €, tu peux épargner 50 €/mois → tu verras
+            combien de mois et autour de quelle date tu atteindras 600 €.
+          </p>
+        </section>
+
+        <!-- Espace pub / partenaire -->
+        <section class="ad-card">
+          <strong>Espace partenaire (à venir)</strong><br />
+          Ici, tu pourras plus tard mettre un lien vers une appli de “wishlist”,
+          un site de comparaison de prix ou une boutique en ligne avec laquelle
+          tu as un partenariat.
+        </section>
+
+        <section class="tool-card">
+          <h2>Lancer le calcul</h2>
+
+          <label>Prix de l’objectif (€)</label>
+          <input
+            type="number"
+            id="objectif"
+            placeholder="Ex : 600 (console, téléphone…)"
+          />
+
+          <label>Épargne possible par mois (€)</label>
+          <input type="number" id="parMois" placeholder="Ex : 50" />
+
+          <button onclick="calculObjectif()">
+            Calculer en combien de temps
+          </button>
+
+          <div id="resultObjectif" class="resultat" style="display: none"></div>
+        </section>
+
+        <a href="index.html" class="inline-link">← Retour à l’accueil</a>
+      </div>
+    </main>
+
+    <footer>Simulateur d’objectif d’achat – Mes Simulateurs en Ligne</footer>
+
+    <script>
+      function calculObjectif() {
+        const objectif =
+          parseFloat(document.getElementById("objectif").value) || 0;
+        const parMois =
+          parseFloat(document.getElementById("parMois").value) || 0;
+
+        const bloc = document.getElementById("resultObjectif");
+        bloc.style.display = "block";
+
+        if (objectif <= 0 || parMois <= 0) {
+          bloc.innerHTML =
+            "Entre un objectif positif et une épargne mensuelle supérieure à 0 € 😉";
+          return;
+        }
+
+        const moisBrut = objectif / parMois;
+        const moisArrondi = Math.ceil(moisBrut);
+
+        const annees = Math.floor(moisArrondi / 12);
+        const resteMois = moisArrondi % 12;
+
+        const maintenant = new Date();
+        const dateObjectif = new Date(
+          maintenant.getFullYear(),
+          maintenant.getMonth() + moisArrondi,
+          maintenant.getDate()
+        );
+        const options = { year: "numeric", month: "long" };
+        const dateLisible = dateObjectif.toLocaleDateString("fr-FR", options);
+
+        let texteTemps = "";
+        if (annees === 0) {
+          texteTemps = moisArrondi + " mois";
+        } else {
+          texteTemps =
+            annees +
+            " an" +
+            (annees > 1 ? "s" : "") +
+            (resteMois > 0 ? " et " + resteMois + " mois" : "");
+        }
+
+        bloc.innerHTML =
+          "Pour un objectif de <strong>" +
+          objectif.toFixed(2) +
+          " €</strong> en mettant <strong>" +
+          parMois.toFixed(2) +
+          " €</strong> de côté chaque mois :<br><br>" +
+          "• Il te faudra environ <strong>" +
+          texteTemps +
+          "</strong>.<br>" +
+          "• Soit environ <strong>" +
+          moisArrondi +
+          " mois</strong> au total.<br>" +
+          "• Tu atteindrais ton objectif aux alentours de <strong>" +
+          dateLisible +
+          "</strong> (à titre indicatif).";
+      }
+    </script>
+  </body>
+</html>
